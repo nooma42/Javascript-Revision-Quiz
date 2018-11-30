@@ -93,6 +93,114 @@ QUnit.test("gaugeScore() responds correctly given certain percentages",function(
 	assert.equal(gaugeScore(100.00),"Wow!","100% returns value of 'Wow!'");
 });
 
+QUnit.test("toggleTests() correctly toggles hiding the 'testing' div",function(assert){
+	
+	var testingDiv = document.getElementById("testing");
+	//store variables
+	var storedVisiblity = testingDiv.style.display;
+	
+	testingDiv.style.display = "";
+	toggleTests();
+	assert.equal(testingDiv.style.display,"none", "Clicking when '' sets display to 'none'");
+	toggleTests();
+	assert.equal(testingDiv.style.display,"", "Clicking when 'none' sets display to ''");
+	
+	//put variables back..
+	testingDiv.style.display = storedVisiblity;
+});
+
+QUnit.test("toggleChat() correctly toggles chat box",function(assert){
+	
+	var chatHeader = document.getElementById("chat-head");
+	var arrowImg = document.getElementById('toggleArrow');
+	
+	//store img value
+	var storedImg = arrowImg.src;
+	
+	toggleChat();
+	assert.equal(arrowImg.src,"down.png", "Clicking header when up changes arrowImg to down arrow");
+	toggleChat();
+	assert.equal(arrowImg.src,"up.png", "Clicking header when down changes arrowImg to up arrow");
+	
+	//put variables back..
+	arrowImg.src = storedImg;
+});
+
+QUnit.test("resetVariables() starting new quiz sets variables to default values", function(assert){
+	
+	//store values
+	var storedIndex = localStorage.questionIndex;
+	var storedData = localStorage.questionData;
+	var storedResults = localStorage.resultsData;
+	var storedScore = localStorage.score;	
+	var storedLocalResults = resultsData;
+	
+	//ensure that there are values!
+	localStorage.questionIndex = 4;
+	localStorage.storedData = ["data!"];
+	localStorage.resultsData = ["results!"];
+	localStorage.score = 5;
+	resultsData = ["localResults!"];
+	
+	resetVariables();
+	
+	assert.equal(localStorage.questionIndex,0, "Ensuring resetVariables() sets questionIndex to 0");
+	assert.equal(localStorage.questionData,undefined, "Ensuring resetVariables() sets questionData to undefined");
+	assert.equal(localStorage.resultsData,undefined, "Ensuring resetVariables() sets resultsData to undefined");
+	assert.equal(localStorage.score,0, "Ensuring resetVariables() sets questionData to 0");
+	assert.equal(resultsData.length,0, "Ensuring resultData local variable is set to empty array");
+	
+	//put variables back..
+	localStorage.questionIndex = storedIndex;
+	localStorage.score = storedScore;
+	
+	//workaround as setting empty localstorage back ends up with the string "undefined"
+	localStorage.questionData = storedData;
+	localStorage.resultsData = storedResults;
+	
+	resultsData = storedLocalResults;
+});
+
+QUnit.test("stopTimer() stops timer from counting", function(assert){
+	var done = assert.async();
+	var timerInstance2 = new timer();
+	timerInstance2.startTimer();
+	timerInstance2.stopTimer(timerInstance2.timerID);
+	setTimeout(timerStopCheck,1000);
+	
+	function timerStopCheck() {
+		assert.equal(timerInstance2.seconds,0,"Checking that timePassed is 0 when timer is stopped, and then 1 second passes");
+		done();
+	}
+});
+
+QUnit.test("seconds should be 0 before timer starts,setTime() and resetTime() sets value of seconds correctly", function(assert){
+	var timerInstance5 = new timer();
+	assert.equal(timerInstance5.seconds,0,"checks that the timer initialises seconds to 0");
+	timerInstance5.setTime(50);
+	assert.equal(timerInstance5.seconds,50,"checks that the timers seconds are now set to 50");
+	timerInstance5.resetTimer();
+	assert.equal(timerInstance5.seconds,0,"checks that the timers seconds are now reset to 0");
+});
+
+QUnit.test("getTime() function returns the correct time string", function(assert){
+	var timerInstance6 = new timer();
+	timerInstance6.setTime(36154);
+	assert.equal(timerInstance6.getTime(),"10 hours, 2 minutes, 34 seconds","checks that 36154 seconds returns string '10 hours, 2 minutes, 34 seconds' ");
+	timerInstance6.setTime(33);
+	assert.equal(timerInstance6.getTime(),"0 hours, 0 minutes, 33 seconds","checks that 33 seconds returns string '0 hours, 0 minutes, 33 seconds' ");
+	timerInstance6.setTime(120);
+	assert.equal(timerInstance6.getTime(),"0 hours, 2 minutes, 0 seconds","checks that 120 seconds returns string '0 hours, 2 minutes, 0 seconds' ");
+	timerInstance6.setTime(3666);
+	assert.equal(timerInstance6.getTime(),"1 hours, 1 minutes, 6 seconds","checks that 3666 seconds returns string '1 hours, 1 minutes, 6 seconds' ");
+});
+
+QUnit.test("calling tickTimer() adds one second to a timer object", function(assert){
+	var timerInstance7 = new timer();
+	assert.equal(timerInstance7.seconds,0,"checks that the timer initialises seconds to 0");
+	timerInstance7.tickTimer();
+	assert.equal(timerInstance7.seconds,1,"checks that the timer seconds is 1 after ticking");
+});
 
 //use plugin to output results to xml file (results.xml) for use in jenkins auto testing
 QUnit.jUnitDone(function(data) {
