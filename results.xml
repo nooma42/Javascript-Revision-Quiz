@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="file:///C:/Users/tom_b/Documents/GitHub/SOFT352%20Quiz/SOFT352-Quiz/index.html" tests="1" failures="1" errors="0" time="0.011">
+<testsuite id="0" name="" hostname="localhost" tests="1" failures="1" errors="0" time="0.006" timestamp="2018-11-30T09:29:14Z">
+<testcase name="Simple test to ensure page title is correct" time="0.004" timestamp="2018-11-30T09:29:14Z">
+<failure type="AssertionFailedError" message="Ensuring SOFT352 is the title." />
+</testcase>
+<system-out>
+<![CDATA[
+[, Simple test to ensure page title is correct, 1] Ensuring SOFT352 is the title.
+Source: file:///C:/Users/tom_b/Documents/GitHub/SOFT352%20Quiz/SOFT352-Quiz/tests.js:2:17
+]]>
+</system-out>
+</testsuite>
+</testsuites>
