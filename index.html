@@ -14,7 +14,30 @@
             <div id="qunit"></div>
             <div id="qunit-fixture"></div>
          </div>
+      <div class="chatWrapper">
+         <div class="chatBox">
+            <div class="chatHead" onclick="toggleChat()">
+               <h2 id="chatTitle">Chat With Others!</h2>
+               <img id="toggleArrow" src="https://img.icons8.com/ios/50/000000/sort-down-filled.png" width="15" alt="toggle">
+            </div>
+            <div class="chatBody">
+               <div id="msgInsert" class="msgInsert">
+                  <!--
+                     <div class="msgSend"> Send message </div>
+                     <div class="msgReceive"> Received message </div>
+					 <div class="msgBroadcast"> jeffy just connected.</div>
+					 <div class="msgError">uh oh! error!</div>
+					  <div class="msgSuccess">woo! success!</div>
+                     -->
+               </div>
+               <div class="chatText">
+                  <textarea id="sendMsg" placeholder="Send messages to your peers!" onkeypress="sendMsg(event)"></textarea>
+               </div>
+            </div>
+         </div>
+      </div>
 		<script src="qunit-reporter-junit.js"></script>
       <script src="tests.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
    </body>
 </html>

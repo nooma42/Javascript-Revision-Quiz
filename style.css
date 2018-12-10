@@ -1,0 +1,123 @@
+body {
+    background-color: #13293D;
+    font-family: arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-flow: column;
+	color: white;
+}
+
+.chatBox{
+	position: fixed;
+	right: 20px;
+	bottom: 0px;
+	background: white;
+	width: 300px;
+	border-radius: 5px 5px 0px 0px;
+}
+.chatHead{
+	width: inherit;
+	height: 45px;
+	background: #0061ff;
+	border-radius: 5px 5px 0px 0px;
+}
+.chatHead h2{
+	color: white;
+	padding: 8px;
+	display: inline-block;
+	margin: 0px;
+}
+.chatHead img{
+	cursor: pointer;
+	float: right;
+	width: 25px;
+	margin: 10px;
+}
+.chatBody{
+	height: 355px;
+	width: inherit;
+	overflow: auto;
+	margin-bottom: 45px;
+}
+.chatText{
+	position: fixed;
+	bottom: 0px;
+	height: 45px;
+	width: inherit;
+}
+.chatText textarea{
+	width: inherit;
+	height: inherit; 
+	box-sizing: border-box;
+	border: 1px solid #bdc3c7;
+	padding: 10px;
+	resize: none;
+}
+.chatText textarea:active, .chat-text textarea:focus, .chat-text textarea:hover{
+	border-color: royalblue;
+}
+.msgSend{
+	background: #2ecc71;
+	text-align: left;
+}
+.msgReceive{
+	background: #3498db;
+	text-align: left;
+}
+
+.msgInsert{
+	text-align: center;
+}
+
+.msgBroadcast{
+	color: grey;
+	position: relative;
+	text-align: center;
+	font-size: 14px;
+	margin: 5px;
+}
+
+.msgError{
+	color:red;
+	position: relative;
+	text-align: center;
+	font-size: 14px;
+	margin: 5px;
+}
+
+.msgSuccess{
+	color:green;
+	position: relative;
+	text-align: center;
+	font-size: 14px;
+	margin: 5px;
+}
+
+#reconnectBtn {
+	background-color: #2A628F;
+	color: white;
+	position: relative;
+	border: 1px solid #000000;
+	text-align: center;
+	font-size: 20px;
+	
+}
+
+.msgSend, .msgReceive{
+	
+	width: 240px;
+	overflow: auto;
+	overflow-y: hidden;
+	word-wrap: break-word;
+	padding: 5px 5px 5px 10px;
+	margin: 10px auto;
+	border-radius: 3px;
+	line-height: 30px;
+	position: relative;
+	color: white;
+	
+}
+
+.msg-receive:hover, .msg-send:hover{
+	opacity: .9;
+}
