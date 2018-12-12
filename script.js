@@ -82,15 +82,23 @@ function connectSocket(isReconnect) {
 
 window.onload = function () {
 	connectSocket(false);
+	quizLoader();
 }
 
 function quizLoader() {
+	
+	var html = document.createElement("div");
+	html.id = "content";
+	html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="clearContent()">START</button>';
+	document.getElementById('mainbox').appendChild(html);
 }
 
 function toggleTests() {
 }
 
 function clearContent() {
+	var content = document.getElementById('content');
+	content.remove();
 }
 
 function startQuiz() {
