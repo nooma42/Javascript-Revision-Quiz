@@ -82,6 +82,7 @@ function connectSocket(isReconnect) {
 
 window.onload = function () {
 	connectSocket(false);
+	toggleTests()
 	quizLoader();
 }
 
@@ -94,6 +95,11 @@ function quizLoader() {
 }
 
 function toggleTests() {
+	if (document.getElementById("testing").style.display == "") {
+		document.getElementById("testing").style.display = "none";
+	} else {
+		document.getElementById("testing").style.display = "";
+	}
 }
 
 function clearContent() {

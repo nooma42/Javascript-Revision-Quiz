@@ -160,3 +160,13 @@ text-align: center;
 .msg-receive:hover, .msg-send:hover{
 	opacity: .9;
 }
+
+#testToggle 
+{
+	color: white;
+	text-decoration: underline;
+    position: absolute;
+    top: calc(100vh - 50px);
+    left: 10px;
+}
+
