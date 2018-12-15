@@ -90,7 +90,7 @@ function quizLoader() {
 	
 	var html = document.createElement("div");
 	html.id = "content";
-	html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="clearContent()">START</button>';
+	html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="startQuiz()">START</button>';
 	document.getElementById('mainbox').appendChild(html);
 }
 
@@ -108,19 +108,41 @@ function clearContent() {
 }
 
 function startQuiz() {
+	clearContent();
+	getQuestions(5,setResults);
 }
 
 function resetVariables() {
 }
 
 function getQuestions(numQuestions,callback) {
+	callAjax(numQuestions,callback);
 }
 
 function setResults(data) {
+	//callback function to load data
+	if (data != null)
+	{
+		//if data is present, store it and proceed
+		questionData = JSON.parse(data);
+		console.log(data);
+		localStorage.questionData = data;
+	}
 }
 
 function callAjax(numQuestions,callback) {
+	var ajaxObj = new XMLHttpRequest();
 
+	ajaxObj.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			callback(this.responseText);
+		} 
+		else if (this.readyState == 4) {
+			console.log("Error, Question data could not be aquired...");
+		}
+	};
+	ajaxObj.open("GET", "http://localhost/questions/" + numQuestions, true);
+	ajaxObj.send();
 }
 
 function nextQuestion() {
