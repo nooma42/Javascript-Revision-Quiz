@@ -1,4 +1,7 @@
+//global vars
 var resultsData;
+var questionData;
+var questionIndex;
 
 function connectSocket(isReconnect) {
 	//disable text entry while connection hasn't been established
@@ -89,11 +92,19 @@ window.onload = function () {
 }
 
 function quizLoader() {
-	
-	var html = document.createElement("div");
-	html.id = "content";
-	html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="startQuiz()">START</button>';
-	document.getElementById('mainbox').appendChild(html);
+	localStorage.removeItem('questionData');
+	//check if there is a question data set in local storage
+	if (localStorage.questionData == undefined)
+	{
+		//if no local storage, load home page
+		factory.create("home","");
+	}
+	else
+	{
+		questionData = JSON.parse(localStorage.questionData);
+		nextQuestion();
+ 		
+	}	
 }
 
 function toggleTests() {
@@ -136,7 +147,7 @@ function setResults(data) {
 	{
 		//if data is present, store it and proceed
 		questionData = JSON.parse(data);
-		console.log(data);
+		//console.log(data);
 		localStorage.questionData = data;
 		clearContent();
 		nextQuestion();	
@@ -164,11 +175,20 @@ function nextQuestion() {
 	
 	var html = document.createElement("div");
 	html.id = "content";
-	html.innerHTML = '<p id="questionText">' + questionData[qIndex].question + '</p>'; 
 	
+	var questionHTML = '<p id="questionText">' + questionData[0].question + '</p>';
+	
+	var answerHTML = '<div class="grid2x2">'
+	
+	//dynamically create the answer boxes dependant on the options available
+	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
+		answerHTML += '<div class="box" id="a' + i + '" onclick="answerQuestion(this)">' + questionData[localStorage.questionIndex].options[i].text + '</div>';
+	}
+	answerHTML += '</div>';
+	
+	html.innerHTML = questionHTML + "</br>" + answerHTML;
 	
 	document.getElementById('mainbox').appendChild(html);
-	
 }
 
 function arrayShuffle(array) {
@@ -227,4 +247,26 @@ function sendMsg(event) {
 }
 
 function timer () {
+}
+
+factory = 
+{
+	create: function(type, subtype) 
+	{
+		var html = document.createElement("div");
+		html.id = "content";
+		
+		if (type == "home") 
+		{
+			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="startQuiz()">START</button>';
+		}
+		
+		if (type == "multi")
+		{
+			qData[qIndex].question;
+		}
+		
+		document.getElementById('mainbox').appendChild(html);
+		
+	}
 }
