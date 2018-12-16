@@ -207,6 +207,6 @@ QUnit.jUnitDone(function(data) {
 	var console = window.console;
 	if (console) {
 		document.output = data.xml;
-		console.log(data.xml);
+		//console.log(data.xml);
 	}
 });

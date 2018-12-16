@@ -16,7 +16,7 @@ function connectSocket(isReconnect) {
 	msgArea.appendChild(newMsg);
 
 	//try to connect to chat socket 3 times
-	socket = io.connect('http://localhost', {
+	socket = io.connect('http://localhost:9001', {
 		'connect timeout': 5000,
 		'reconnectionAttempts': 3
 	});
@@ -82,7 +82,7 @@ function connectSocket(isReconnect) {
 
 window.onload = function () {
 	connectSocket(false);
-	toggleTests()
+	toggleTests();
 	quizLoader();
 }
 
@@ -103,8 +103,11 @@ function toggleTests() {
 }
 
 function clearContent() {
+	//this clears down the content div which contains everything displayed within the main blue box
 	var content = document.getElementById('content');
-	content.remove();
+	if (content != null) {
+		content.remove();
+	}
 }
 
 function startQuiz() {
@@ -113,6 +116,12 @@ function startQuiz() {
 }
 
 function resetVariables() {
+	//resets stored quiz variables 
+	localStorage.questionIndex = 0;
+	localStorage.score = 0;
+	localStorage.removeItem("questionData");
+	localStorage.removeItem("resultsData");
+	resultsData = [];
 }
 
 function getQuestions(numQuestions,callback) {
@@ -127,6 +136,8 @@ function setResults(data) {
 		questionData = JSON.parse(data);
 		console.log(data);
 		localStorage.questionData = data;
+		clearContent();
+		nextQuestion();	
 	}
 }
 
@@ -141,11 +152,22 @@ function callAjax(numQuestions,callback) {
 			console.log("Error, Question data could not be aquired...");
 		}
 	};
-	ajaxObj.open("GET", "http://localhost/questions/" + numQuestions, true);
+	ajaxObj.open("GET", "http://localhost:9001/questions/" + numQuestions, true);
 	ajaxObj.send();
 }
 
 function nextQuestion() {
+	console.log("hellooo");
+	//load vars from local storage
+	var qIndex = localStorage.questionIndex;
+	
+	var html = document.createElement("div");
+	html.id = "content";
+	html.innerHTML = '<p id="questionText">' + questionData[qIndex].question + '</p>'; 
+	
+	
+	document.getElementById('mainbox').appendChild(html);
+	
 }
 
 function arrayShuffle(array) {
