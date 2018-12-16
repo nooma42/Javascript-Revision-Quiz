@@ -1,3 +1,5 @@
+var resultsData;
+
 function connectSocket(isReconnect) {
 	//disable text entry while connection hasn't been established
 	document.getElementById("sendMsg").disabled = true;
@@ -157,7 +159,6 @@ function callAjax(numQuestions,callback) {
 }
 
 function nextQuestion() {
-	console.log("hellooo");
 	//load vars from local storage
 	var qIndex = localStorage.questionIndex;
 	

@@ -1,3 +1,16 @@
+function rgb2hex(color) {
+    digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+    red = parseInt(digits[2],10);
+    green = parseInt(digits[3],10);
+    blue = parseInt(digits[4],10);
+    rgb = blue | (green << 8) | (red << 16);
+    if(red == 0){
+        return digits[1] + '#00' + rgb.toString(16).toUpperCase();
+    }else{
+        return digits[1] + '#' + rgb.toString(16).toUpperCase();
+    }
+}
+
 QUnit.test("Simple test to ensure page title is correct", function(assert){
     assert.equal(document.getElementsByTagName("title")[0].innerHTML, "SOFT352 Quiz","Ensuring SOFT352 is the title.");
 });
