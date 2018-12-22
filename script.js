@@ -3,6 +3,8 @@ var resultsData;
 var questionData;
 var questionIndex;
 
+var questionAnswered = false;
+
 function connectSocket(isReconnect) {
 	//disable text entry while connection hasn't been established
 	document.getElementById("sendMsg").disabled = true;
@@ -208,9 +210,49 @@ function gaugeScore(percentage) {
 }
 
 function answerQuestion(optionSelected) {
+	var selectedID = optionSelected.id
+	var optionNum = selectedID.replace('a','');
+
+	if(questionAnswered)
+	{
+		return
+	}
+	else
+	{
+		questionAnswered = true;
+	}
+
+	optionSelected.style.border = '5px solid white';
+
+
+	//loop through options, select correct one
+	for (i = 0; i < questionData[0].options.length; i++)
+	{
+		if(questionData[0].options[i].correct == "1")
+		{
+			var correctID = "a";
+			//+1 to ofset arrays starting at 0
+			correctID = correctID.concat(i+1);
+			document.getElementById(correctID).style.backgroundColor = "green";
+			if(selectedID == correctID)
+			{
+				//they got it right, incriment score 
+				incrimentScore();
+			}
+			break;
+		}
+	}
+
+	var nextBtn = document.createElement("button");
+	nextBtn.id = "nextBtn";
+	nextBtn.innerHTML = "Next Question";
+
+	var content = document.getElementById("content");
+	content.appendChild(nextBtn);
 }
 
 function incrimentScore() {
+	localStorage.score++;
 }
 
 function incrimentIndex() {
