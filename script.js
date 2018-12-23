@@ -88,6 +88,7 @@ function connectSocket(isReconnect) {
 }
 
 window.onload = function () {
+	resetVariables();
 	connectSocket(false);
 	toggleTests();
 	quizLoader();
@@ -173,6 +174,7 @@ function callAjax(numQuestions,callback) {
 
 function nextQuestion() {
 	//load vars from local storage
+	clearContent();
 	var qIndex = localStorage.questionIndex;
 	
 	var html = document.createElement("div");
@@ -191,6 +193,29 @@ function nextQuestion() {
 	html.innerHTML = questionHTML + "</br>" + answerHTML;
 	
 	document.getElementById('mainbox').appendChild(html);
+		if ((parseInt(localStorage.questionIndex)+1) == questionData.length)
+	{
+		//its the last question, change button to finish
+		var finishBtn = document.createElement("button");
+		finishBtn.id = "finishBtn";
+		finishBtn.innerHTML = "Finish";
+		finishBtn.style.visibility = "hidden";
+		finishBtn.onclick = function(){finishQuiz()};
+		var br = document.createElement("br");
+		html.appendChild(br);
+		html.appendChild(finishBtn);		
+	}
+	else
+	{
+		var nextBtn = document.createElement("button");
+		nextBtn.id = "nextBtn";
+		nextBtn.onclick = function(){nextQuestion()};
+		nextBtn.innerHTML = "Next Question";
+		nextBtn.style.visibility = "hidden";
+		var br = document.createElement("br");
+		html.appendChild(br);
+		html.appendChild(nextBtn);
+	}
 }
 
 function arrayShuffle(array) {
@@ -242,13 +267,17 @@ function answerQuestion(optionSelected) {
 			break;
 		}
 	}
-
-	var nextBtn = document.createElement("button");
-	nextBtn.id = "nextBtn";
-	nextBtn.innerHTML = "Next Question";
-
-	var content = document.getElementById("content");
-	content.appendChild(nextBtn);
+	incrimentIndex();
+	var nextBtn = document.getElementById("nextBtn");
+	var finishBtn = document.getElementById("finishBtn");
+	if (nextBtn != null)
+	{
+		nextBtn.style.visibility = "visible";
+	}
+	else if (finishBtn != null)
+	{
+		finishBtn.style.visibility = "visible";
+	}
 }
 
 function incrimentScore() {
@@ -256,6 +285,7 @@ function incrimentScore() {
 }
 
 function incrimentIndex() {
+	localStorage.questionIndex++;
 }
 
 function toggleChat() {
