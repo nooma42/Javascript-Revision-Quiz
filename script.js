@@ -127,6 +127,7 @@ function clearContent() {
 }
 
 function startQuiz() {
+	resetVariables();
 	clearContent();
 	getQuestions(5,setResults);
 }
@@ -145,18 +146,15 @@ function getQuestions(numQuestions,callback) {
 }
 
 function setResults(data) {
-	//callback function to load data
 	if (data != null)
 	{
 		//if data is present, store it and proceed
 		questionData = JSON.parse(data);
-		//console.log(data);
 		localStorage.questionData = data;
 		clearContent();
-		nextQuestion();	
+		nextQuestion();		
 	}
 }
-
 function callAjax(numQuestions,callback) {
 	var ajaxObj = new XMLHttpRequest();
 
@@ -180,6 +178,7 @@ function nextQuestion() {
 	var html = document.createElement("div");
 	html.id = "content";
 	
+	questionAnswered = false;
 	var questionHTML = '<p id="questionText">' + questionData[0].question + '</p>';
 	
 	var answerHTML = '<div class="grid2x2">'
@@ -223,9 +222,36 @@ function arrayShuffle(array) {
 }
 
 function finishQuiz() {
+	if(document.getElementById("content") != null)
+	{
+		var content = document.getElementById("content")
+		content.parentNode.removeChild(content);
+	}
+	var html = document.createElement("div");
+	html.id = "content";	
+	
+	var percentage = calculatePercentage();
+	var response = gaugeScore(percentage)
+	
+	var questionHTML = '<p id="finishText">' + response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)" + '</p>';
+	
+		html.innerHTML = questionHTML;
+	
+	document.getElementById('mainbox').appendChild(html);
+	
+	var restartBtn = document.createElement("button");
+	restartBtn.id = "restartBtn";
+	restartBtn.innerHTML = "Try Again";
+	restartBtn.onclick = function(){restartQuiz()};
+	var br = document.createElement("br");
+	html.appendChild(br);
+	html.appendChild(restartBtn);	
 }
 
 function restartQuiz() {
+	resetVariables();
+	clearContent();
+	quizLoader();
 }
 
 function calculatePercentage(score, quizLength) {
@@ -236,31 +262,27 @@ function gaugeScore(percentage) {
 
 function answerQuestion(optionSelected) {
 	var selectedID = optionSelected.id
-	var optionNum = selectedID.replace('a','');
+	var optionNum = selectedID.replace('a', '');
 
-	if(questionAnswered)
-	{
+	if (questionAnswered) {
 		return
-	}
-	else
-	{
+	} else {
 		questionAnswered = true;
 	}
 
 	optionSelected.style.border = '5px solid white';
 
-
 	//loop through options, select correct one
-	for (i = 0; i < questionData[0].options.length; i++)
-	{
-		if(questionData[0].options[i].correct == "1")
-		{
+	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
+		if (questionData[localStorage.questionIndex].options[i].correct == "1") {
+			
+			//set resultsData with 1. question asked, 2. Correct Result, 3. Answer Given
+			resultsData[localStorage.questionIndex] = [questionData[localStorage.questionIndex].question,questionData[localStorage.questionIndex].options[i].text,questionData[localStorage.questionIndex].options[optionNum].text]
+			localStorage.resultsData = JSON.stringify(resultsData);
 			var correctID = "a";
-			//+1 to ofset arrays starting at 0
-			correctID = correctID.concat(i+1);
+			correctID = correctID.concat(i);
 			document.getElementById(correctID).style.backgroundColor = "green";
-			if(selectedID == correctID)
-			{
+			if (selectedID == correctID) {
 				//they got it right, incriment score 
 				incrimentScore();
 			}
@@ -268,14 +290,13 @@ function answerQuestion(optionSelected) {
 		}
 	}
 	incrimentIndex();
+	
+	//DOM handling
 	var nextBtn = document.getElementById("nextBtn");
 	var finishBtn = document.getElementById("finishBtn");
-	if (nextBtn != null)
-	{
+	if (nextBtn != null) {
 		nextBtn.style.visibility = "visible";
-	}
-	else if (finishBtn != null)
-	{
+	} else if (finishBtn != null) {
 		finishBtn.style.visibility = "visible";
 	}
 }
