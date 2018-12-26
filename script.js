@@ -88,22 +88,22 @@ function connectSocket(isReconnect) {
 }
 
 window.onload = function () {
-	resetVariables();
+	//resetVariables();
 	connectSocket(false);
 	toggleTests();
 	quizLoader();
 }
 
 function quizLoader() {
-	localStorage.removeItem('questionData');
 	//check if there is a question data set in local storage
-	if (localStorage.questionData == undefined)
+	if (localStorage.questionData == undefined || localStorage.questionData == "undefined" )
 	{
 		//if no local storage, load home page
 		factory.create("home","");
 	}
 	else
 	{
+		//alert(localStorage.questionData);
 		questionData = JSON.parse(localStorage.questionData);
 		nextQuestion();
  		
@@ -172,6 +172,13 @@ function callAjax(numQuestions,callback) {
 }
 
 function nextQuestion() {
+	
+	if ((parseInt(localStorage.questionIndex)) == questionData.length)
+	{
+		finishQuiz();
+		return;
+	}
+	
 	//load vars from local storage
 	clearContent();
 	var qIndex = localStorage.questionIndex;
@@ -180,7 +187,7 @@ function nextQuestion() {
 	html.id = "content";
 	
 	questionAnswered = false;
-	var questionHTML = '<p id="questionText">' + questionData[0].question + '</p>';
+	var questionHTML = '<p id="questionText">' + questionData[localStorage.questionIndex].question + '</p>';
 	
 	var answerHTML = '<div class="grid2x2">'
 	
@@ -231,7 +238,10 @@ function finishQuiz() {
 	var html = document.createElement("div");
 	html.id = "content";	
 	
-	var percentage = calculatePercentage();
+	var score = localStorage.score;
+	var quizLength = questionData.length;
+	var percentage = calculatePercentage(score,quizLength);
+	
 	var response = gaugeScore(percentage)
 	
 	var questionHTML = '<p id="finishText">' + response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)" + '</p>';
@@ -255,12 +265,8 @@ function restartQuiz() {
 	quizLoader();
 }
 
-function calculatePercentage()
-{
-	var score = localStorage.score;
-	var quizLength = questionData.length;
-	var percentage = ((score/quizLength) *100).toFixed(2);	
-	//alert(score + "/" + quizLength + "=" +(score/quizLength) *100);
+function calculatePercentage(score, quizLength) {
+	var percentage = ((score / quizLength) * 100).toFixed(2);
 	return percentage;
 }
 
@@ -312,9 +318,6 @@ function answerQuestion(optionSelected) {
 	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
 		if (questionData[localStorage.questionIndex].options[i].correct == "1") {
 			
-			//set resultsData with 1. question asked, 2. Correct Result, 3. Answer Given
-			resultsData[localStorage.questionIndex] = [questionData[localStorage.questionIndex].question,questionData[localStorage.questionIndex].options[i].text,questionData[localStorage.questionIndex].options[optionNum].text]
-			localStorage.resultsData = JSON.stringify(resultsData);
 			var correctID = "a";
 			correctID = correctID.concat(i);
 			document.getElementById(correctID).style.backgroundColor = "green";
