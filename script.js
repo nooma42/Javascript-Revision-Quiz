@@ -1,5 +1,7 @@
 //global vars
-var resultsData;
+
+//array to store correct answer, and the specified answer, for use when exporting
+var resultsData = [];
 var questionData;
 var questionIndex;
 
@@ -164,6 +166,7 @@ function callAjax(numQuestions,callback) {
 			callback(this.responseText);
 		} 
 		else if (this.readyState == 4) {
+			toastr.error("Cannot get questions from server...", "Error");
 			console.log("Error, Question data could not be aquired...");
 		}
 	};
@@ -246,6 +249,12 @@ function finishQuiz() {
 	
 	var questionHTML = '<p id="finishText">' + response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)" + '</p>';
 	
+	var exportHTML = document.createElement("a");
+	exportHTML.id = "export";
+	exportHTML.innerHTML = "Export Results";
+	exportHTML.href=  "export.html";
+	exportHTML.target= "_blank";
+	
 		html.innerHTML = questionHTML;
 	
 	document.getElementById('mainbox').appendChild(html);
@@ -257,6 +266,8 @@ function finishQuiz() {
 	var br = document.createElement("br");
 	html.appendChild(br);
 	html.appendChild(restartBtn);	
+		html.appendChild(br);
+	html.appendChild(exportHTML);
 }
 
 function restartQuiz() {
@@ -317,7 +328,9 @@ function answerQuestion(optionSelected) {
 	//loop through options, select correct one
 	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
 		if (questionData[localStorage.questionIndex].options[i].correct == "1") {
-			
+			//set resultsData with 1. Correct Result, 2. Answer Given
+			resultsData[localStorage.questionIndex] = [questionData[localStorage.questionIndex].question,questionData[localStorage.questionIndex].options[i].text,questionData[localStorage.questionIndex].options[optionNum].text]
+			localStorage.resultsData = JSON.stringify(resultsData);
 			var correctID = "a";
 			correctID = correctID.concat(i);
 			document.getElementById(correctID).style.backgroundColor = "green";
