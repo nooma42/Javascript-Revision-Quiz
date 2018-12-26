@@ -127,9 +127,10 @@ function clearContent() {
 }
 
 function startQuiz() {
+	var quizLength = document.getElementById("quizLength").value
 	resetVariables();
 	clearContent();
-	getQuestions(5,setResults);
+	getQuestions(quizLength,setResults);
 }
 
 function resetVariables() {
@@ -254,10 +255,45 @@ function restartQuiz() {
 	quizLoader();
 }
 
-function calculatePercentage(score, quizLength) {
+function calculatePercentage()
+{
+	var score = localStorage.score;
+	var quizLength = questionData.length;
+	var percentage = ((score/quizLength) *100).toFixed(2);	
+	//alert(score + "/" + quizLength + "=" +(score/quizLength) *100);
+	return percentage;
 }
 
 function gaugeScore(percentage) {
+	//this calculates how well they did, and responds appropriately!
+	
+	var response = "";
+	
+	if (percentage == 100)
+	{
+		response = "Wow!";
+	}
+	else if (percentage >= 70)
+	{
+		response = "Great Job!";
+	}
+	else if (percentage >= 60)
+	{
+		response = "Not bad!";
+	}
+	else if (percentage >= 50)
+	{
+		response = "Keep practicing!";
+	}
+	else if (percentage >= 40)
+	{
+		response = "Needs improvement!";
+	}
+	else
+	{
+		response = "Oh no!";
+	}
+	return response;
 }
 
 function answerQuestion(optionSelected) {
@@ -351,9 +387,9 @@ factory =
 		
 		if (type == "home") 
 		{
-			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><button id="startbtn"  onclick="startQuiz()">START</button>';
+			var selectOptions = '<option value="5">Short (5 Questions)</option><option value="10">Medium (10 Questions)</option><option value="20">Long (20 Questions)</option>';
+			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><select id="quizLength">'+selectOptions+'</select><button id="startbtn"  onclick="startQuiz()">START</button>';		
 		}
-		
 		if (type == "multi")
 		{
 			qData[qIndex].question;
