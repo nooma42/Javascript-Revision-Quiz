@@ -19,7 +19,7 @@ function populate()
 	{
 		var questionInfo = document.createElement("div");
 		questionInfo.id = ("a"+i+1)
-		questionInfo.innerHTML = "You Answered: " + resultsData[i][1];
+		questionInfo.innerHTML = "You Answered: " + resultsData[i][2];
 		
 		if(resultsData[i][1] == resultsData[i][2])
 		{
@@ -42,7 +42,7 @@ function populate()
 		
 		var correctInfo = document.createElement("div");
 		correctInfo.id = ("c"+i+1);
-		correctInfo.innerHTML = "Correct Answer: " + resultsData[i][2];
+		correctInfo.innerHTML = "Correct Answer: " + resultsData[i][1];
 		content.appendChild(correctInfo);	
 		
 		var br = document.createElement("br");

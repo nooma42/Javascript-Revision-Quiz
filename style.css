@@ -240,3 +240,14 @@ h1	{
 #export {
 	 color: white; 
 }
+
+#summary {
+	font-size: 25px; 	
+}
+
+#quizSummary {
+	padding: 30px;
+	display: flex;
+    flex-flow: column;
+    align-items: center;
+}

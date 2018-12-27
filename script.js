@@ -106,6 +106,7 @@ function quizLoader() {
 	else
 	{
 		//alert(localStorage.questionData);
+		resultsData = JSON.parse(localStorage.resultsData);
 		questionData = JSON.parse(localStorage.questionData);
 		nextQuestion();
  		
