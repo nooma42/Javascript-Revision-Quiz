@@ -182,6 +182,9 @@ function nextQuestion() {
 		return;
 	}
 	
+	//shuffles the order of the question options, to avoid users learning the place of answers in questions!
+	questionData[localStorage.questionIndex].options =arrayShuffle(questionData[localStorage.questionIndex].options)
+	
 	//load vars from local storage
 	clearContent();
 	var qIndex = localStorage.questionIndex;
@@ -229,7 +232,14 @@ function nextQuestion() {
 }
 
 function arrayShuffle(array) {
-	//this will shuffle the options of the questions!
+	var i, tem, j, len = array.length;
+	for (i = 0; i < len; i++) {
+		j = ~~(Math.random() * len);
+		tem = array[i];
+		array[i] = array[j];
+		array[j] = tem;
+	}
+	return array;
 }
 
 function finishQuiz() {
@@ -271,6 +281,7 @@ function finishQuiz() {
 }
 
 function restartQuiz() {
+	//reset everything and run as if first load
 	resetVariables();
 	clearContent();
 	quizLoader();
@@ -328,7 +339,7 @@ function answerQuestion(optionSelected) {
 	//loop through options, select correct one
 	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
 		if (questionData[localStorage.questionIndex].options[i].correct == "1") {
-			//set resultsData with 1. Correct Result, 2. Answer Given
+			//set resultsData with 1. question asked, 2. Correct Result, 3. Answer Given
 			resultsData[localStorage.questionIndex] = [questionData[localStorage.questionIndex].question,questionData[localStorage.questionIndex].options[i].text,questionData[localStorage.questionIndex].options[optionNum].text]
 			localStorage.resultsData = JSON.stringify(resultsData);
 			var correctID = "a";
@@ -404,7 +415,7 @@ factory =
 		if (type == "home") 
 		{
 			var selectOptions = '<option value="5">Short (5 Questions)</option><option value="10">Medium (10 Questions)</option><option value="20">Long (20 Questions)</option>';
-			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><select id="quizLength">'+selectOptions+'</select><button id="startbtn"  onclick="startQuiz()">START</button>';		
+			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><select id="quizLength">'+selectOptions+'</select><br></br><button id="startbtn"  onclick="startQuiz()">START</button>';		
 		}
 		if (type == "multi")
 		{

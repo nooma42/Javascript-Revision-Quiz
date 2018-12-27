@@ -227,3 +227,16 @@ h1	{
 	font-size: 37px;	
 }
 
+#quizLength {
+    font-family: arial, sans-serif;	
+	padding: 5px 5px 5px 5px;
+	border:0;
+}
+
+#questionNum {
+	color: white;
+}
+
+#export {
+	 color: white; 
+}
