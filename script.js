@@ -431,11 +431,10 @@ factory =
 
 function timer () {
 	var instance = this;
-	this.seconds;
+	this.seconds = 0;
 	this.timerID;
 	this.startTimer = function() {
 		//console.log("starting!!!");
-		if (instance.seconds == null) {console.log("its null! :(");instance.seconds = 0;}
 		instance.timerID = setInterval(instance.tickTimer, 1000);
 	};
 	this.tickTimer = function() {
@@ -449,7 +448,6 @@ function timer () {
 	};
 	this.resetTimer = function() {
 		instance.seconds = 0;
-		localStorage.timeTaken = 0;
 	};
 	this.setTime = function(secs) {
 		instance.seconds = secs;
