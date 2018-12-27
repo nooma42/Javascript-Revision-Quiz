@@ -6,6 +6,7 @@ var questionData;
 var questionIndex;
 
 var questionAnswered = false;
+var quizTimer = new timer();
 
 function connectSocket(isReconnect) {
 	//disable text entry while connection hasn't been established
@@ -108,8 +109,10 @@ function quizLoader() {
 		//alert(localStorage.questionData);
 		resultsData = JSON.parse(localStorage.resultsData);
 		questionData = JSON.parse(localStorage.questionData);
+		quizTimer.setTime(parseInt(localStorage.timeTaken));
+		quizTimer.startTimer();
 		nextQuestion();
- 		
+
 	}	
 }
 
@@ -156,6 +159,7 @@ function setResults(data) {
 		questionData = JSON.parse(data);
 		localStorage.questionData = data;
 		clearContent();
+		quizTimer.startTimer();
 		nextQuestion();		
 	}
 }
@@ -244,11 +248,10 @@ function arrayShuffle(array) {
 }
 
 function finishQuiz() {
-	if(document.getElementById("content") != null)
-	{
-		var content = document.getElementById("content")
-		content.parentNode.removeChild(content);
-	}
+	
+	clearContent();
+	quizTimer.stopTimer(quizTimer.timerID);
+	
 	var html = document.createElement("div");
 	html.id = "content";	
 	
@@ -258,6 +261,8 @@ function finishQuiz() {
 	
 	var response = gaugeScore(percentage)
 	
+	var timeHTML = '<div id="timeText">Time Taken: ' + quizTimer.getTime() + '</div>';
+	
 	var questionHTML = '<p id="finishText">' + response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)" + '</p>';
 	
 	var exportHTML = document.createElement("a");
@@ -266,7 +271,7 @@ function finishQuiz() {
 	exportHTML.href=  "export.html";
 	exportHTML.target= "_blank";
 	
-		html.innerHTML = questionHTML;
+		html.innerHTML = timeHTML + questionHTML;
 	
 	document.getElementById('mainbox').appendChild(html);
 	
@@ -283,6 +288,8 @@ function finishQuiz() {
 
 function restartQuiz() {
 	//reset everything and run as if first load
+	localStorage.timeTaken = 0;
+	quizTimer.resetTimer();
 	resetVariables();
 	clearContent();
 	quizLoader();
