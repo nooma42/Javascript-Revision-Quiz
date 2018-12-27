@@ -377,6 +377,7 @@ function toggleChat() {
 
 	var img = document.getElementById('toggleArrow');
 	$('.chatBody').slideToggle('fast');
+	
 	if (img.src == "https://img.icons8.com/ios/50/000000/sort-up-filled.png") {
 		img.src = "https://img.icons8.com/ios/50/000000/sort-down-filled.png";
 	} else {
@@ -426,4 +427,39 @@ factory =
 		document.getElementById('mainbox').appendChild(html);
 		
 	}
+}
+
+function timer () {
+	var instance = this;
+	this.seconds;
+	this.timerID;
+	this.startTimer = function() {
+		//console.log("starting!!!");
+		if (instance.seconds == null) {console.log("its null! :(");instance.seconds = 0;}
+		instance.timerID = setInterval(instance.tickTimer, 1000);
+	};
+	this.tickTimer = function() {
+		++instance.seconds;
+		localStorage.timeTaken = instance.seconds;
+		//console.log(instance.seconds);
+	};
+	this.stopTimer = function(timerID) {
+		clearInterval(timerID);
+		//console.log("trying to stop timer..");
+	};
+	this.resetTimer = function() {
+		instance.seconds = 0;
+		localStorage.timeTaken = 0;
+	};
+	this.setTime = function(secs) {
+		instance.seconds = secs;
+		//console.log("set seconds to : " + instance.seconds);
+	};
+	this.getTime = function() {
+		var hours = Math.floor(instance.seconds / 3600);
+		var mins = Math.floor((instance.seconds - (hours * 3600)) / 60);
+		var secs = instance.seconds %60;
+		var timeString = hours + " hours, " + mins + " minutes, " + secs + " seconds"; 
+		return timeString;
+	};
 }

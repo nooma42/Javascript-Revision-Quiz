@@ -131,9 +131,9 @@ QUnit.test("toggleChat() correctly toggles chat box",function(assert){
 	var storedImg = arrowImg.src;
 	
 	toggleChat();
-	assert.equal(arrowImg.src,"down.png", "Clicking header when up changes arrowImg to down arrow");
+	assert.equal(arrowImg.src,"https://img.icons8.com/ios/50/000000/sort-up-filled.png", "Clicking header when up changes arrowImg to down arrow");
 	toggleChat();
-	assert.equal(arrowImg.src,"up.png", "Clicking header when down changes arrowImg to up arrow");
+	assert.equal(arrowImg.src,"https://img.icons8.com/ios/50/000000/sort-down-filled.png", "Clicking header when down changes arrowImg to up arrow");
 	
 	//put variables back..
 	arrowImg.src = storedImg;
