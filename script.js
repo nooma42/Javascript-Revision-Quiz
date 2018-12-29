@@ -135,7 +135,6 @@ function clearContent() {
 function startQuiz() {
 	var quizLength = document.getElementById("quizLength").value
 	resetVariables();
-	clearContent();
 	getQuestions(quizLength,setResults);
 }
 
@@ -208,7 +207,9 @@ function nextQuestion() {
 	}
 	answerHTML += '</div>';
 	
-	html.innerHTML = questionHTML + "</br>" + answerHTML;
+	var questionNum = "<div id='questionNum'>" + (parseInt(localStorage.questionIndex) + 1) + '/' + questionData.length + "</div>"
+	
+	html.innerHTML = questionNum + questionHTML + "</br>" + answerHTML;
 	
 	document.getElementById('mainbox').appendChild(html);
 		if ((parseInt(localStorage.questionIndex)+1) == questionData.length)
