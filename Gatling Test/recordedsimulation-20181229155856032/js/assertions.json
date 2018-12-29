@@ -1,0 +1,10 @@
+{
+  "simulation": "default.RecordedSimulation",
+  "simulationId": "recordedsimulation",
+  "start": 1546099136032,
+  "description": "100 concurrent users, opening website and getting dataset",
+  "scenarios": ["RecordedSimulation"],
+  "assertions": [
+
+  ]
+}

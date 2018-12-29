@@ -102,7 +102,7 @@ function quizLoader() {
 	if (localStorage.questionData == undefined || localStorage.questionData == "undefined" )
 	{
 		//if no local storage, load home page
-		factory.create("home","");
+		htmlFactory.create("home","");
 	}
 	else
 	{
@@ -415,7 +415,7 @@ function sendMsg(event) {
 function timer () {
 }
 
-factory = 
+htmlFactory = 
 {
 	create: function(type, subtype) 
 	{
@@ -430,6 +430,11 @@ factory =
 		if (type == "multi")
 		{
 			qData[qIndex].question;
+		}
+		if (type == "div")
+		{
+			var newDiv = document.createElement("div");
+			
 		}
 		
 		document.getElementById('mainbox').appendChild(html);
