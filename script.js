@@ -102,12 +102,15 @@ function quizLoader() {
 	if (localStorage.questionData == undefined || localStorage.questionData == "undefined" )
 	{
 		//if no local storage, load home page
-		htmlFactory.create("home","");
+		document.getElementById('mainbox').appendChild(htmlFactory.create("home",""));
 	}
 	else
 	{
 		//alert(localStorage.questionData);
-		resultsData = JSON.parse(localStorage.resultsData);
+		if (localStorage.resultsData != undefined && localStorage.resultsData != "undefined")
+		{
+			resultsData = JSON.parse(localStorage.resultsData);
+		}
 		questionData = JSON.parse(localStorage.questionData);
 		quizTimer.setTime(parseInt(localStorage.timeTaken));
 		quizTimer.startTimer();
@@ -186,52 +189,53 @@ function nextQuestion() {
 		return;
 	}
 	
+	questionAnswered = false;
+	
 	//shuffles the order of the question options, to avoid users learning the place of answers in questions!
-	questionData[localStorage.questionIndex].options =arrayShuffle(questionData[localStorage.questionIndex].options)
+	questionData[localStorage.questionIndex].options = arrayShuffle(questionData[localStorage.questionIndex].options)
 	
 	//load vars from local storage
 	clearContent();
+	
 	var qIndex = localStorage.questionIndex;
 	
-	var html = document.createElement("div");
-	html.id = "content";
+	var html = htmlFactory.create("div","content");
+
 	
-	questionAnswered = false;
-	var questionHTML = '<p id="questionText">' + questionData[localStorage.questionIndex].question + '</p>';
+	var questionHTML = htmlFactory.create("p","questionText",questionData[localStorage.questionIndex].question);
+	//var questionHTML = '<p id="questionText">' + questionData[localStorage.questionIndex].question + '</p>';
 	
-	var answerHTML = '<div class="grid2x2">'
 	
-	//dynamically create the answer boxes dependant on the options available
-	for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
-		answerHTML += '<div class="box" id="a' + i + '" onclick="answerQuestion(this)">' + questionData[localStorage.questionIndex].options[i].text + '</div>';
-	}
-	answerHTML += '</div>';
+	var answerHTML = htmlFactory.create("grid2x2");
 	
-	var questionNum = "<div id='questionNum'>" + (parseInt(localStorage.questionIndex) + 1) + '/' + questionData.length + "</div>"
+	var questionNum = htmlFactory.create("div","questionNum", (parseInt(localStorage.questionIndex) + 1) + '/' + questionData.length);
 	
-	html.innerHTML = questionNum + questionHTML + "</br>" + answerHTML;
 	
+			
 	document.getElementById('mainbox').appendChild(html);
-		if ((parseInt(localStorage.questionIndex)+1) == questionData.length)
+	
+	document.getElementById('content').appendChild(questionNum);
+	document.getElementById('content').appendChild(questionHTML);
+	document.getElementById('content').appendChild(answerHTML);
+	
+	var br = htmlFactory.create("br");
+	
+	if ((parseInt(localStorage.questionIndex)+1) == questionData.length)
 	{
 		//its the last question, change button to finish
-		var finishBtn = document.createElement("button");
-		finishBtn.id = "finishBtn";
-		finishBtn.innerHTML = "Finish";
+		var finishBtn = htmlFactory.create("button","finishBtn","Finish");
 		finishBtn.style.visibility = "hidden";
 		finishBtn.onclick = function(){finishQuiz()};
-		var br = document.createElement("br");
+
 		html.appendChild(br);
 		html.appendChild(finishBtn);		
 	}
 	else
 	{
-		var nextBtn = document.createElement("button");
-		nextBtn.id = "nextBtn";
-		nextBtn.onclick = function(){nextQuestion()};
-		nextBtn.innerHTML = "Next Question";
+		var nextBtn = htmlFactory.create("button","nextBtn","Next Question");
 		nextBtn.style.visibility = "hidden";
-		var br = document.createElement("br");
+		nextBtn.onclick = function(){nextQuestion()};
+		
 		html.appendChild(br);
 		html.appendChild(nextBtn);
 	}
@@ -253,8 +257,7 @@ function finishQuiz() {
 	clearContent();
 	quizTimer.stopTimer(quizTimer.timerID);
 	
-	var html = document.createElement("div");
-	html.id = "content";	
+	var html = htmlFactory.create("div","content");
 	
 	var score = localStorage.score;
 	var quizLength = questionData.length;
@@ -262,29 +265,27 @@ function finishQuiz() {
 	
 	var response = gaugeScore(percentage)
 	
-	var timeHTML = '<div id="timeText">Time Taken: ' + quizTimer.getTime() + '</div>';
-	
-	var questionHTML = '<p id="finishText">' + response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)" + '</p>';
-	
-	var exportHTML = document.createElement("a");
-	exportHTML.id = "export";
-	exportHTML.innerHTML = "Export Results";
-	exportHTML.href=  "export.html";
+	var timeHTML = htmlFactory.create("div","timeText","Time Taken:" + quizTimer.getTime());
+
+	var resultHTML = htmlFactory.create("p","finishText",response +  "\nYou Scored: " + localStorage.score + "/" + questionData.length + " (" + percentage + "%)");
+
+	var exportHTML = htmlFactory.create("a","export","Export Results");
 	exportHTML.target= "_blank";
+	exportHTML.href=  "export.html";
 	
-		html.innerHTML = timeHTML + questionHTML;
+	var restartBtn = htmlFactory.create("button","restartBtn","Try Again");
+	restartBtn.onclick = function(){restartQuiz()};
+	
+	var br = htmlFactory.create("br");
 	
 	document.getElementById('mainbox').appendChild(html);
 	
-	var restartBtn = document.createElement("button");
-	restartBtn.id = "restartBtn";
-	restartBtn.innerHTML = "Try Again";
-	restartBtn.onclick = function(){restartQuiz()};
-	var br = document.createElement("br");
-	html.appendChild(br);
-	html.appendChild(restartBtn);	
-		html.appendChild(br);
-	html.appendChild(exportHTML);
+	document.getElementById('content').appendChild(timeHTML);
+	document.getElementById('content').appendChild(resultHTML);	
+	document.getElementById('content').appendChild(br);
+	document.getElementById('content').appendChild(restartBtn);
+	document.getElementById('content').appendChild(br);
+	document.getElementById('content').appendChild(exportHTML);
 }
 
 function restartQuiz() {
@@ -417,28 +418,46 @@ function timer () {
 
 htmlFactory = 
 {
-	create: function(type, subtype) 
+	create: function(type, subtype, txt) 
 	{
-		var html = document.createElement("div");
-		html.id = "content";
+
+		var html;
 		
 		if (type == "home") 
 		{
+			html = document.createElement("div");
+			html.id = "content";
+		
 			var selectOptions = '<option value="5">Short (5 Questions)</option><option value="10">Medium (10 Questions)</option><option value="20">Long (20 Questions)</option>';
 			html.innerHTML = '<p id="introtext">Welcome to this SOFT352 Revision Tool!</br>Your knowledge on the module will be tested in quiz format!</p><select id="quizLength">'+selectOptions+'</select><br></br><button id="startbtn"  onclick="startQuiz()">START</button>';		
-		}
-		if (type == "multi")
+		}		
+		else if (type == "br")
 		{
-			qData[qIndex].question;
+			html = document.createElement("br");
 		}
-		if (type == "div")
+		else if (type == "grid2x2")
 		{
-			var newDiv = document.createElement("div");
-			
+			html = document.createElement("div");
+			html.className = "grid2x2";
+			var answerHTML = "";
+			//dynamically create the answer boxes dependant on the options available
+			for (i = 0; i < questionData[localStorage.questionIndex].options.length; i++) {
+				answerHTML += '<div class="box" id="a' + i + '" onclick="answerQuestion(this)">' + questionData[localStorage.questionIndex].options[i].text + '</div>';
+			}
+			answerHTML += '</div>';
+			html.innerHTML = answerHTML;
 		}
-		
-		document.getElementById('mainbox').appendChild(html);
-		
+		else 
+		{
+			html = document.createElement(type);
+			html.id = subtype;
+			if(txt != null)
+			{
+				html.innerHTML = txt;
+			}
+		}
+		return html;
+	
 	}
 }
 
